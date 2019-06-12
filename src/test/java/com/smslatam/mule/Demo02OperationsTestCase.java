@@ -2,6 +2,8 @@ package com.smslatam.mule;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+
+import org.junit.Ignore;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
 import org.junit.Test;
 
@@ -22,6 +24,22 @@ public class Demo02OperationsTestCase extends MuleArtifactFunctionalTestCase {
                                       .getPayload()
                                       .getValue());
     assertThat(payloadValue, is("Hello Mariano Gonzalez!!!"));
+  }
+
+  @Test
+  public void executeSayGoodbyeValidPersonOperation() throws Exception {
+    String payloadValue = ((String) flowRunner("sayGoodByeFlowWithValidPerson").run()
+            .getMessage()
+            .getPayload()
+            .getValue());
+    assertThat(payloadValue, is("Good bye Mariano Gonzalez."));
+  }
+
+  @Ignore
+  @Test
+  public void executeSayGoodbyeEmptyPersonOperation() throws Exception {
+    flowRunner("sayGoodByeFlowWithEmptyPerson").run();
+
   }
 
   @Test

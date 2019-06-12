@@ -16,4 +16,12 @@
         <demo02:retrieve-info config-ref="config"/>
     </flow>
 
+    <flow name="sayGoodByeFlowWithValidPerson">
+        <demo02:say-goodbye person="Mariano Gonzalez"/>
+    </flow>
+
+    <flow name="sayGoodByeFlowWithEmptyPerson">
+        <demo02:say-goodbye person="x"/>
+    </flow>
+
 </mule>
