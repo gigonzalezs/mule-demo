@@ -9,6 +9,10 @@ import org.mule.runtime.extension.api.runtime.process.CompletionCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static org.mule.runtime.extension.api.annotation.param.MediaType.ANY;
 
 
@@ -46,10 +50,26 @@ public class Demo02Operations {
      callback.error(new RuntimeException("argument person is null or empty"));
     }
     else {
-      callback.success(Result.<String, String>builder()
-              .output(buildGoodByeMessage(person))
-              .attributes("GOOD BYE")
-              .build());
+
+      supplyAsync(() -> {
+        LOGGER.info("begin async operation execution");
+        try {
+          LOGGER.info("start simulate blocking / expensive process...");
+          Thread.sleep(5000);
+          LOGGER.info("end simulate blocking / expensive process.");
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+        final String goodbyeMessage = buildGoodByeMessage(person);
+        LOGGER.info("finish async operation execution");
+        return goodbyeMessage;
+      })
+      .thenAccept(goodbyeMessage -> {
+        callback.success(Result.<String, String>builder()
+                .output(goodbyeMessage)
+                .attributes("GOOD BYE")
+                .build());
+      });
     }
     LOGGER.info("finish async operation declaration");
   }
